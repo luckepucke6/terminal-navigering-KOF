@@ -29,6 +29,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # This step activates GitHub Pages for the repo and sets the source to
+      # "GitHub Actions" if it hasn't been configured yet. Without it, the
+      # deploy step below fails immediately because Pages doesn't exist.
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:

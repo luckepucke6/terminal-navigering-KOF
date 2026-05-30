@@ -1,0 +1,592 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" style="font-family: sans-serif;">
+<!--
+  KOF TERMINAL MAP — full cold-storage layout (v2: spot numbers + full-width C/D)
+
+  Section ids used by TerminalMap.jsx for highlighting:
+    section-A, section-B, section-C, section-D,
+    section-E, section-F, section-Golv-left, section-Golv-right
+
+  Highlighting: TerminalMap.jsx adds class="highlighted" to the active <g>.
+  CSS rule .section-group.highlighted .spot / .floor-row fills them yellow.
+-->
+<style>
+  .spot           { fill: #bcc9d4; stroke: #8899aa; stroke-width: 0.5; }
+  .beam           { fill: #2d3e50; }
+  .aisle-rect     { fill: #e8ecf0; }
+  .floor-row      { fill: #bcc9d4; stroke: #8899aa; stroke-width: 0.5; }
+  .floor-row-recv { fill: #9ec89e; stroke: #6a9a6a; stroke-width: 0.5; }
+  .freezer-rect   { fill: #dceef8; stroke: #4a90d9; stroke-width: 1.5;
+                    stroke-dasharray: 8,4; }
+  /* Spot number labels — small, light-coloured so they show on the blue-grey spots */
+  .spot-num       { font-size: 7px; fill: #ddeeff; text-anchor: middle;
+                    dominant-baseline: central; pointer-events: none; }
+
+  /* Highlighting: add class="highlighted" to a section-group to activate */
+  .section-group.highlighted .spot           { fill: var(--color-highlight, #ffc107); }
+  .section-group.highlighted .floor-row      { fill: var(--color-highlight, #ffc107); }
+  .section-group.highlighted .floor-row-recv { fill: var(--color-highlight, #ffc107); }
+  /* Keep numbers readable when highlighted */
+  .section-group.highlighted .spot-num       { fill: #333; }
+
+  .sec-lbl   { font-size:13px; font-weight:700; fill:#1a3a5c; text-anchor:middle; }
+  .area-lbl  { font-size:10px; font-weight:600; fill:#1a3a5c; text-anchor:middle; }
+  .aisle-lbl { font-size:10px; fill:#667788; text-anchor:middle; dominant-baseline:middle; }
+  .row-num   { font-size:8.5px; fill:#445566; text-anchor:middle; dominant-baseline:central; }
+  .recv-lbl  { font-size:9px; font-weight:600; fill:#336633; text-anchor:middle; }
+  .inout-lbl { font-size:8px; font-weight:600; fill:#3366aa; text-anchor:middle; }
+</style>
+  <!-- Vertical truck aisles — full height, left and right -->
+  <rect class="aisle-rect" x="0" y="0" width="48" height="1200"/>
+  <text class="aisle-lbl" x="24" y="600" transform="rotate(-90,24,600)">↕ truckväg</text>
+  <rect class="aisle-rect" x="752" y="0" width="48" height="1200"/>
+  <text class="aisle-lbl" x="776" y="600" transform="rotate(90,776,600)">↕ truckväg</text>
+
+
+  <text class="area-lbl" x="400" y="14">STÄLLAGET</text>
+
+  <!-- Section A: 30 spots, 10 groups of 3 -->
+  <text class="sec-lbl" x="400" y="28">A</text>
+  <g id="section-A" class="section-group">
+    <rect class="spot" x="48" y="34" width="22" height="28"/>
+    <text class="spot-num" x="59" y="48">1</text>
+    <rect class="spot" x="70" y="34" width="22" height="28"/>
+    <text class="spot-num" x="81" y="48">2</text>
+    <rect class="spot" x="92" y="34" width="22" height="28"/>
+    <text class="spot-num" x="103" y="48">3</text>
+    <rect class="beam" x="114" y="34" width="5" height="28"/>
+    <rect class="spot" x="119" y="34" width="22" height="28"/>
+    <text class="spot-num" x="130" y="48">4</text>
+    <rect class="spot" x="141" y="34" width="22" height="28"/>
+    <text class="spot-num" x="152" y="48">5</text>
+    <rect class="spot" x="163" y="34" width="22" height="28"/>
+    <text class="spot-num" x="174" y="48">6</text>
+    <rect class="beam" x="185" y="34" width="5" height="28"/>
+    <rect class="spot" x="190" y="34" width="22" height="28"/>
+    <text class="spot-num" x="201" y="48">7</text>
+    <rect class="spot" x="212" y="34" width="22" height="28"/>
+    <text class="spot-num" x="223" y="48">8</text>
+    <rect class="spot" x="234" y="34" width="22" height="28"/>
+    <text class="spot-num" x="245" y="48">9</text>
+    <rect class="beam" x="256" y="34" width="5" height="28"/>
+    <rect class="spot" x="261" y="34" width="22" height="28"/>
+    <text class="spot-num" x="272" y="48">10</text>
+    <rect class="spot" x="283" y="34" width="22" height="28"/>
+    <text class="spot-num" x="294" y="48">11</text>
+    <rect class="spot" x="305" y="34" width="22" height="28"/>
+    <text class="spot-num" x="316" y="48">12</text>
+    <rect class="beam" x="327" y="34" width="5" height="28"/>
+    <rect class="spot" x="332" y="34" width="22" height="28"/>
+    <text class="spot-num" x="343" y="48">13</text>
+    <rect class="spot" x="354" y="34" width="22" height="28"/>
+    <text class="spot-num" x="365" y="48">14</text>
+    <rect class="spot" x="376" y="34" width="22" height="28"/>
+    <text class="spot-num" x="387" y="48">15</text>
+    <rect class="beam" x="398" y="34" width="5" height="28"/>
+    <rect class="spot" x="403" y="34" width="22" height="28"/>
+    <text class="spot-num" x="414" y="48">16</text>
+    <rect class="spot" x="425" y="34" width="22" height="28"/>
+    <text class="spot-num" x="436" y="48">17</text>
+    <rect class="spot" x="447" y="34" width="22" height="28"/>
+    <text class="spot-num" x="458" y="48">18</text>
+    <rect class="beam" x="469" y="34" width="5" height="28"/>
+    <rect class="spot" x="474" y="34" width="22" height="28"/>
+    <text class="spot-num" x="485" y="48">19</text>
+    <rect class="spot" x="496" y="34" width="22" height="28"/>
+    <text class="spot-num" x="507" y="48">20</text>
+    <rect class="spot" x="518" y="34" width="22" height="28"/>
+    <text class="spot-num" x="529" y="48">21</text>
+    <rect class="beam" x="540" y="34" width="5" height="28"/>
+    <rect class="spot" x="545" y="34" width="22" height="28"/>
+    <text class="spot-num" x="556" y="48">22</text>
+    <rect class="spot" x="567" y="34" width="22" height="28"/>
+    <text class="spot-num" x="578" y="48">23</text>
+    <rect class="spot" x="589" y="34" width="22" height="28"/>
+    <text class="spot-num" x="600" y="48">24</text>
+    <rect class="beam" x="611" y="34" width="5" height="28"/>
+    <rect class="spot" x="616" y="34" width="22" height="28"/>
+    <text class="spot-num" x="627" y="48">25</text>
+    <rect class="spot" x="638" y="34" width="22" height="28"/>
+    <text class="spot-num" x="649" y="48">26</text>
+    <rect class="spot" x="660" y="34" width="22" height="28"/>
+    <text class="spot-num" x="671" y="48">27</text>
+    <rect class="beam" x="682" y="34" width="5" height="28"/>
+    <rect class="spot" x="687" y="34" width="22" height="28"/>
+    <text class="spot-num" x="698" y="48">28</text>
+    <rect class="spot" x="709" y="34" width="22" height="28"/>
+    <text class="spot-num" x="720" y="48">29</text>
+    <rect class="spot" x="731" y="34" width="22" height="28"/>
+    <text class="spot-num" x="742" y="48">30</text>
+  </g>
+
+  <!-- Truck aisle between A and B -->
+  <rect class="aisle-rect" x="48" y="62" width="705" height="48"/>
+  <text class="aisle-lbl" x="400" y="86">↔ truckväg</text>
+
+  <!-- Section B: 30 spots, 10 groups of 3 -->
+  <text class="sec-lbl" x="400" y="108">B</text>
+  <g id="section-B" class="section-group">
+    <rect class="spot" x="48" y="110" width="22" height="28"/>
+    <text class="spot-num" x="59" y="124">1</text>
+    <rect class="spot" x="70" y="110" width="22" height="28"/>
+    <text class="spot-num" x="81" y="124">2</text>
+    <rect class="spot" x="92" y="110" width="22" height="28"/>
+    <text class="spot-num" x="103" y="124">3</text>
+    <rect class="beam" x="114" y="110" width="5" height="28"/>
+    <rect class="spot" x="119" y="110" width="22" height="28"/>
+    <text class="spot-num" x="130" y="124">4</text>
+    <rect class="spot" x="141" y="110" width="22" height="28"/>
+    <text class="spot-num" x="152" y="124">5</text>
+    <rect class="spot" x="163" y="110" width="22" height="28"/>
+    <text class="spot-num" x="174" y="124">6</text>
+    <rect class="beam" x="185" y="110" width="5" height="28"/>
+    <rect class="spot" x="190" y="110" width="22" height="28"/>
+    <text class="spot-num" x="201" y="124">7</text>
+    <rect class="spot" x="212" y="110" width="22" height="28"/>
+    <text class="spot-num" x="223" y="124">8</text>
+    <rect class="spot" x="234" y="110" width="22" height="28"/>
+    <text class="spot-num" x="245" y="124">9</text>
+    <rect class="beam" x="256" y="110" width="5" height="28"/>
+    <rect class="spot" x="261" y="110" width="22" height="28"/>
+    <text class="spot-num" x="272" y="124">10</text>
+    <rect class="spot" x="283" y="110" width="22" height="28"/>
+    <text class="spot-num" x="294" y="124">11</text>
+    <rect class="spot" x="305" y="110" width="22" height="28"/>
+    <text class="spot-num" x="316" y="124">12</text>
+    <rect class="beam" x="327" y="110" width="5" height="28"/>
+    <rect class="spot" x="332" y="110" width="22" height="28"/>
+    <text class="spot-num" x="343" y="124">13</text>
+    <rect class="spot" x="354" y="110" width="22" height="28"/>
+    <text class="spot-num" x="365" y="124">14</text>
+    <rect class="spot" x="376" y="110" width="22" height="28"/>
+    <text class="spot-num" x="387" y="124">15</text>
+    <rect class="beam" x="398" y="110" width="5" height="28"/>
+    <rect class="spot" x="403" y="110" width="22" height="28"/>
+    <text class="spot-num" x="414" y="124">16</text>
+    <rect class="spot" x="425" y="110" width="22" height="28"/>
+    <text class="spot-num" x="436" y="124">17</text>
+    <rect class="spot" x="447" y="110" width="22" height="28"/>
+    <text class="spot-num" x="458" y="124">18</text>
+    <rect class="beam" x="469" y="110" width="5" height="28"/>
+    <rect class="spot" x="474" y="110" width="22" height="28"/>
+    <text class="spot-num" x="485" y="124">19</text>
+    <rect class="spot" x="496" y="110" width="22" height="28"/>
+    <text class="spot-num" x="507" y="124">20</text>
+    <rect class="spot" x="518" y="110" width="22" height="28"/>
+    <text class="spot-num" x="529" y="124">21</text>
+    <rect class="beam" x="540" y="110" width="5" height="28"/>
+    <rect class="spot" x="545" y="110" width="22" height="28"/>
+    <text class="spot-num" x="556" y="124">22</text>
+    <rect class="spot" x="567" y="110" width="22" height="28"/>
+    <text class="spot-num" x="578" y="124">23</text>
+    <rect class="spot" x="589" y="110" width="22" height="28"/>
+    <text class="spot-num" x="600" y="124">24</text>
+    <rect class="beam" x="611" y="110" width="5" height="28"/>
+    <rect class="spot" x="616" y="110" width="22" height="28"/>
+    <text class="spot-num" x="627" y="124">25</text>
+    <rect class="spot" x="638" y="110" width="22" height="28"/>
+    <text class="spot-num" x="649" y="124">26</text>
+    <rect class="spot" x="660" y="110" width="22" height="28"/>
+    <text class="spot-num" x="671" y="124">27</text>
+    <rect class="beam" x="682" y="110" width="5" height="28"/>
+    <rect class="spot" x="687" y="110" width="22" height="28"/>
+    <text class="spot-num" x="698" y="124">28</text>
+    <rect class="spot" x="709" y="110" width="22" height="28"/>
+    <text class="spot-num" x="720" y="124">29</text>
+    <rect class="spot" x="731" y="110" width="22" height="28"/>
+    <text class="spot-num" x="742" y="124">30</text>
+  </g>
+
+  <!-- FRYSEN (freezer, dashed border) — between C and D -->
+  <rect class="freezer-rect" x="83" y="150" width="635" height="308"/>
+  <text x="400" y="296" text-anchor="middle" font-size="16" font-weight="700" fill="#3366aa">❄ FRYSEN</text>
+  <text x="400" y="314" text-anchor="middle" font-size="9" fill="#5577aa">(fryszon — specificeras senare)</text>
+
+  <!-- Section C: 15 spots (5×3), vertical, starts at x=48 -->
+  <text class="sec-lbl" x="24" y="300">C</text>
+  <g id="section-C" class="section-group">
+    <rect class="spot" x="48" y="150" width="35" height="18"/>
+    <text class="spot-num" x="65" y="159">1</text>
+    <rect class="spot" x="48" y="168" width="35" height="18"/>
+    <text class="spot-num" x="65" y="177">2</text>
+    <rect class="spot" x="48" y="186" width="35" height="18"/>
+    <text class="spot-num" x="65" y="195">3</text>
+    <rect class="beam" x="48" y="204" width="35" height="5"/>
+    <rect class="spot" x="48" y="209" width="35" height="18"/>
+    <text class="spot-num" x="65" y="218">4</text>
+    <rect class="spot" x="48" y="227" width="35" height="18"/>
+    <text class="spot-num" x="65" y="236">5</text>
+    <rect class="spot" x="48" y="245" width="35" height="18"/>
+    <text class="spot-num" x="65" y="254">6</text>
+    <rect class="beam" x="48" y="263" width="35" height="5"/>
+    <rect class="spot" x="48" y="268" width="35" height="18"/>
+    <text class="spot-num" x="65" y="277">7</text>
+    <rect class="spot" x="48" y="286" width="35" height="18"/>
+    <text class="spot-num" x="65" y="295">8</text>
+    <rect class="spot" x="48" y="304" width="35" height="18"/>
+    <text class="spot-num" x="65" y="313">9</text>
+    <rect class="beam" x="48" y="322" width="35" height="5"/>
+    <rect class="spot" x="48" y="327" width="35" height="18"/>
+    <text class="spot-num" x="65" y="336">10</text>
+    <rect class="spot" x="48" y="345" width="35" height="18"/>
+    <text class="spot-num" x="65" y="354">11</text>
+    <rect class="spot" x="48" y="363" width="35" height="18"/>
+    <text class="spot-num" x="65" y="372">12</text>
+    <rect class="beam" x="48" y="381" width="35" height="5"/>
+    <rect class="spot" x="48" y="386" width="35" height="18"/>
+    <text class="spot-num" x="65" y="395">13</text>
+    <rect class="spot" x="48" y="404" width="35" height="18"/>
+    <text class="spot-num" x="65" y="413">14</text>
+    <rect class="spot" x="48" y="422" width="35" height="18"/>
+    <text class="spot-num" x="65" y="431">15</text>
+  </g>
+
+  <!-- Section D: 16 spots (3|3|3|3|4), vertical, ends at x=753 -->
+  <text class="sec-lbl" x="776" y="300">D</text>
+  <g id="section-D" class="section-group">
+    <rect class="spot" x="718" y="150" width="35" height="18"/>
+    <text class="spot-num" x="735" y="159">1</text>
+    <rect class="spot" x="718" y="168" width="35" height="18"/>
+    <text class="spot-num" x="735" y="177">2</text>
+    <rect class="spot" x="718" y="186" width="35" height="18"/>
+    <text class="spot-num" x="735" y="195">3</text>
+    <rect class="beam" x="718" y="204" width="35" height="5"/>
+    <rect class="spot" x="718" y="209" width="35" height="18"/>
+    <text class="spot-num" x="735" y="218">4</text>
+    <rect class="spot" x="718" y="227" width="35" height="18"/>
+    <text class="spot-num" x="735" y="236">5</text>
+    <rect class="spot" x="718" y="245" width="35" height="18"/>
+    <text class="spot-num" x="735" y="254">6</text>
+    <rect class="beam" x="718" y="263" width="35" height="5"/>
+    <rect class="spot" x="718" y="268" width="35" height="18"/>
+    <text class="spot-num" x="735" y="277">7</text>
+    <rect class="spot" x="718" y="286" width="35" height="18"/>
+    <text class="spot-num" x="735" y="295">8</text>
+    <rect class="spot" x="718" y="304" width="35" height="18"/>
+    <text class="spot-num" x="735" y="313">9</text>
+    <rect class="beam" x="718" y="322" width="35" height="5"/>
+    <rect class="spot" x="718" y="327" width="35" height="18"/>
+    <text class="spot-num" x="735" y="336">10</text>
+    <rect class="spot" x="718" y="345" width="35" height="18"/>
+    <text class="spot-num" x="735" y="354">11</text>
+    <rect class="spot" x="718" y="363" width="35" height="18"/>
+    <text class="spot-num" x="735" y="372">12</text>
+    <rect class="beam" x="718" y="381" width="35" height="5"/>
+    <rect class="spot" x="718" y="386" width="35" height="18"/>
+    <text class="spot-num" x="735" y="395">13</text>
+    <rect class="spot" x="718" y="404" width="35" height="18"/>
+    <text class="spot-num" x="735" y="413">14</text>
+    <rect class="spot" x="718" y="422" width="35" height="18"/>
+    <text class="spot-num" x="735" y="431">15</text>
+    <rect class="spot" x="718" y="440" width="35" height="18"/>
+    <text class="spot-num" x="735" y="449">16</text>
+  </g>
+
+  <!-- Section E: 14 spots (2|3|3|3|3), starts at x=48 -->
+  <g id="section-E" class="section-group">
+    <rect class="spot" x="48" y="468" width="22" height="28"/>
+    <text class="spot-num" x="59" y="482">1</text>
+    <rect class="spot" x="70" y="468" width="22" height="28"/>
+    <text class="spot-num" x="81" y="482">2</text>
+    <rect class="beam" x="92" y="468" width="5" height="28"/>
+    <rect class="spot" x="97" y="468" width="22" height="28"/>
+    <text class="spot-num" x="108" y="482">3</text>
+    <rect class="spot" x="119" y="468" width="22" height="28"/>
+    <text class="spot-num" x="130" y="482">4</text>
+    <rect class="spot" x="141" y="468" width="22" height="28"/>
+    <text class="spot-num" x="152" y="482">5</text>
+    <rect class="beam" x="163" y="468" width="5" height="28"/>
+    <rect class="spot" x="168" y="468" width="22" height="28"/>
+    <text class="spot-num" x="179" y="482">6</text>
+    <rect class="spot" x="190" y="468" width="22" height="28"/>
+    <text class="spot-num" x="201" y="482">7</text>
+    <rect class="spot" x="212" y="468" width="22" height="28"/>
+    <text class="spot-num" x="223" y="482">8</text>
+    <rect class="beam" x="234" y="468" width="5" height="28"/>
+    <rect class="spot" x="239" y="468" width="22" height="28"/>
+    <text class="spot-num" x="250" y="482">9</text>
+    <rect class="spot" x="261" y="468" width="22" height="28"/>
+    <text class="spot-num" x="272" y="482">10</text>
+    <rect class="spot" x="283" y="468" width="22" height="28"/>
+    <text class="spot-num" x="294" y="482">11</text>
+    <rect class="beam" x="305" y="468" width="5" height="28"/>
+    <rect class="spot" x="310" y="468" width="22" height="28"/>
+    <text class="spot-num" x="321" y="482">12</text>
+    <rect class="spot" x="332" y="468" width="22" height="28"/>
+    <text class="spot-num" x="343" y="482">13</text>
+    <rect class="spot" x="354" y="468" width="22" height="28"/>
+    <text class="spot-num" x="365" y="482">14</text>
+  </g>
+
+  <!-- In/Ut frysen — gap between E and F -->
+  <text class="inout-lbl" x="447" y="478">In/Ut</text>
+  <text class="inout-lbl" x="447" y="489">frysen</text>
+
+  <!-- Section F: 10 spots (3|3|3|1), ends at x=753 -->
+  <g id="section-F" class="section-group">
+    <rect class="spot" x="518" y="468" width="22" height="28"/>
+    <text class="spot-num" x="529" y="482">1</text>
+    <rect class="spot" x="540" y="468" width="22" height="28"/>
+    <text class="spot-num" x="551" y="482">2</text>
+    <rect class="spot" x="562" y="468" width="22" height="28"/>
+    <text class="spot-num" x="573" y="482">3</text>
+    <rect class="beam" x="584" y="468" width="5" height="28"/>
+    <rect class="spot" x="589" y="468" width="22" height="28"/>
+    <text class="spot-num" x="600" y="482">4</text>
+    <rect class="spot" x="611" y="468" width="22" height="28"/>
+    <text class="spot-num" x="622" y="482">5</text>
+    <rect class="spot" x="633" y="468" width="22" height="28"/>
+    <text class="spot-num" x="644" y="482">6</text>
+    <rect class="beam" x="655" y="468" width="5" height="28"/>
+    <rect class="spot" x="660" y="468" width="22" height="28"/>
+    <text class="spot-num" x="671" y="482">7</text>
+    <rect class="spot" x="682" y="468" width="22" height="28"/>
+    <text class="spot-num" x="693" y="482">8</text>
+    <rect class="spot" x="704" y="468" width="22" height="28"/>
+    <text class="spot-num" x="715" y="482">9</text>
+    <rect class="beam" x="726" y="468" width="5" height="28"/>
+    <rect class="spot" x="731" y="468" width="22" height="28"/>
+    <text class="spot-num" x="742" y="482">10</text>
+  </g>
+
+  <!-- Truck aisle separating racking from floor -->
+  <rect class="aisle-rect" x="48" y="502" width="705" height="40"/>
+  <text class="aisle-lbl" x="400" y="522">↔ truckväg</text>
+
+  <!-- GOLVET — left block rows 74→37, right block rows 36→1 -->
+  <text class="sec-lbl" x="209" y="515">E</text>
+  <text class="sec-lbl" x="591" y="515">F</text>
+  <text class="area-lbl" x="209" y="544">GOLVET</text>
+  <text class="area-lbl" x="591" y="544">GOLVET</text>
+  <rect class="aisle-rect" x="370" y="550" width="60" height="608"/>
+  <text class="aisle-lbl" x="400" y="854" transform="rotate(-90,400,854)">↕ truckväg</text>
+  <text class="recv-lbl" x="209" y="630">MOTTAGNING (rad 65–74)</text>
+
+  <g id="section-Golv-left" class="section-group">
+    <rect class="floor-row-recv" x="73" y="550" width="272" height="16"/>
+    <text class="row-num" x="60" y="558">74</text>
+    <text class="row-num" x="358" y="558">74</text>
+    <rect class="floor-row-recv" x="73" y="566" width="272" height="16"/>
+    <text class="row-num" x="60" y="574">73</text>
+    <text class="row-num" x="358" y="574">73</text>
+    <rect class="floor-row-recv" x="73" y="582" width="272" height="16"/>
+    <text class="row-num" x="60" y="590">72</text>
+    <text class="row-num" x="358" y="590">72</text>
+    <rect class="floor-row-recv" x="73" y="598" width="272" height="16"/>
+    <text class="row-num" x="60" y="606">71</text>
+    <text class="row-num" x="358" y="606">71</text>
+    <rect class="floor-row-recv" x="73" y="614" width="272" height="16"/>
+    <text class="row-num" x="60" y="622">70</text>
+    <text class="row-num" x="358" y="622">70</text>
+    <rect class="floor-row-recv" x="73" y="630" width="272" height="16"/>
+    <text class="row-num" x="60" y="638">69</text>
+    <text class="row-num" x="358" y="638">69</text>
+    <rect class="floor-row-recv" x="73" y="646" width="272" height="16"/>
+    <text class="row-num" x="60" y="654">68</text>
+    <text class="row-num" x="358" y="654">68</text>
+    <rect class="floor-row-recv" x="73" y="662" width="272" height="16"/>
+    <text class="row-num" x="60" y="670">67</text>
+    <text class="row-num" x="358" y="670">67</text>
+    <rect class="floor-row-recv" x="73" y="678" width="272" height="16"/>
+    <text class="row-num" x="60" y="686">66</text>
+    <text class="row-num" x="358" y="686">66</text>
+    <rect class="floor-row-recv" x="73" y="694" width="272" height="16"/>
+    <text class="row-num" x="60" y="702">65</text>
+    <text class="row-num" x="358" y="702">65</text>
+    <rect class="floor-row" x="73" y="710" width="272" height="16"/>
+    <text class="row-num" x="60" y="718">64</text>
+    <text class="row-num" x="358" y="718">64</text>
+    <rect class="floor-row" x="73" y="726" width="272" height="16"/>
+    <text class="row-num" x="60" y="734">63</text>
+    <text class="row-num" x="358" y="734">63</text>
+    <rect class="floor-row" x="73" y="742" width="272" height="16"/>
+    <text class="row-num" x="60" y="750">62</text>
+    <text class="row-num" x="358" y="750">62</text>
+    <rect class="floor-row" x="73" y="758" width="272" height="16"/>
+    <text class="row-num" x="60" y="766">61</text>
+    <text class="row-num" x="358" y="766">61</text>
+    <rect class="floor-row" x="73" y="774" width="272" height="16"/>
+    <text class="row-num" x="60" y="782">60</text>
+    <text class="row-num" x="358" y="782">60</text>
+    <rect class="floor-row" x="73" y="790" width="272" height="16"/>
+    <text class="row-num" x="60" y="798">59</text>
+    <text class="row-num" x="358" y="798">59</text>
+    <rect class="floor-row" x="73" y="806" width="272" height="16"/>
+    <text class="row-num" x="60" y="814">58</text>
+    <text class="row-num" x="358" y="814">58</text>
+    <rect class="floor-row" x="73" y="822" width="272" height="16"/>
+    <text class="row-num" x="60" y="830">57</text>
+    <text class="row-num" x="358" y="830">57</text>
+    <rect class="floor-row" x="73" y="838" width="272" height="16"/>
+    <text class="row-num" x="60" y="846">56</text>
+    <text class="row-num" x="358" y="846">56</text>
+    <rect class="floor-row" x="73" y="854" width="272" height="16"/>
+    <text class="row-num" x="60" y="862">55</text>
+    <text class="row-num" x="358" y="862">55</text>
+    <rect class="floor-row" x="73" y="870" width="272" height="16"/>
+    <text class="row-num" x="60" y="878">54</text>
+    <text class="row-num" x="358" y="878">54</text>
+    <rect class="floor-row" x="73" y="886" width="272" height="16"/>
+    <text class="row-num" x="60" y="894">53</text>
+    <text class="row-num" x="358" y="894">53</text>
+    <rect class="floor-row" x="73" y="902" width="272" height="16"/>
+    <text class="row-num" x="60" y="910">52</text>
+    <text class="row-num" x="358" y="910">52</text>
+    <rect class="floor-row" x="73" y="918" width="272" height="16"/>
+    <text class="row-num" x="60" y="926">51</text>
+    <text class="row-num" x="358" y="926">51</text>
+    <rect class="floor-row" x="73" y="934" width="272" height="16"/>
+    <text class="row-num" x="60" y="942">50</text>
+    <text class="row-num" x="358" y="942">50</text>
+    <rect class="floor-row" x="73" y="950" width="272" height="16"/>
+    <text class="row-num" x="60" y="958">49</text>
+    <text class="row-num" x="358" y="958">49</text>
+    <rect class="floor-row" x="73" y="966" width="272" height="16"/>
+    <text class="row-num" x="60" y="974">48</text>
+    <text class="row-num" x="358" y="974">48</text>
+    <rect class="floor-row" x="73" y="982" width="272" height="16"/>
+    <text class="row-num" x="60" y="990">47</text>
+    <text class="row-num" x="358" y="990">47</text>
+    <rect class="floor-row" x="73" y="998" width="272" height="16"/>
+    <text class="row-num" x="60" y="1006">46</text>
+    <text class="row-num" x="358" y="1006">46</text>
+    <rect class="floor-row" x="73" y="1014" width="272" height="16"/>
+    <text class="row-num" x="60" y="1022">45</text>
+    <text class="row-num" x="358" y="1022">45</text>
+    <rect class="floor-row" x="73" y="1030" width="272" height="16"/>
+    <text class="row-num" x="60" y="1038">44</text>
+    <text class="row-num" x="358" y="1038">44</text>
+    <rect class="floor-row" x="73" y="1046" width="272" height="16"/>
+    <text class="row-num" x="60" y="1054">43</text>
+    <text class="row-num" x="358" y="1054">43</text>
+    <rect class="floor-row" x="73" y="1062" width="272" height="16"/>
+    <text class="row-num" x="60" y="1070">42</text>
+    <text class="row-num" x="358" y="1070">42</text>
+    <rect class="floor-row" x="73" y="1078" width="272" height="16"/>
+    <text class="row-num" x="60" y="1086">41</text>
+    <text class="row-num" x="358" y="1086">41</text>
+    <rect class="floor-row" x="73" y="1094" width="272" height="16"/>
+    <text class="row-num" x="60" y="1102">40</text>
+    <text class="row-num" x="358" y="1102">40</text>
+    <rect class="floor-row" x="73" y="1110" width="272" height="16"/>
+    <text class="row-num" x="60" y="1118">39</text>
+    <text class="row-num" x="358" y="1118">39</text>
+    <rect class="floor-row" x="73" y="1126" width="272" height="16"/>
+    <text class="row-num" x="60" y="1134">38</text>
+    <text class="row-num" x="358" y="1134">38</text>
+    <rect class="floor-row" x="73" y="1142" width="272" height="16"/>
+    <text class="row-num" x="60" y="1150">37</text>
+    <text class="row-num" x="358" y="1150">37</text>
+  </g>
+
+  <g id="section-Golv-right" class="section-group">
+    <rect class="floor-row" x="455" y="550" width="273" height="16"/>
+    <text class="row-num" x="442" y="558">36</text>
+    <text class="row-num" x="741" y="558">36</text>
+    <rect class="floor-row" x="455" y="566" width="273" height="16"/>
+    <text class="row-num" x="442" y="574">35</text>
+    <text class="row-num" x="741" y="574">35</text>
+    <rect class="floor-row" x="455" y="582" width="273" height="16"/>
+    <text class="row-num" x="442" y="590">34</text>
+    <text class="row-num" x="741" y="590">34</text>
+    <rect class="floor-row" x="455" y="598" width="273" height="16"/>
+    <text class="row-num" x="442" y="606">33</text>
+    <text class="row-num" x="741" y="606">33</text>
+    <rect class="floor-row" x="455" y="614" width="273" height="16"/>
+    <text class="row-num" x="442" y="622">32</text>
+    <text class="row-num" x="741" y="622">32</text>
+    <rect class="floor-row" x="455" y="630" width="273" height="16"/>
+    <text class="row-num" x="442" y="638">31</text>
+    <text class="row-num" x="741" y="638">31</text>
+    <rect class="floor-row" x="455" y="646" width="273" height="16"/>
+    <text class="row-num" x="442" y="654">30</text>
+    <text class="row-num" x="741" y="654">30</text>
+    <rect class="floor-row" x="455" y="662" width="273" height="16"/>
+    <text class="row-num" x="442" y="670">29</text>
+    <text class="row-num" x="741" y="670">29</text>
+    <rect class="floor-row" x="455" y="678" width="273" height="16"/>
+    <text class="row-num" x="442" y="686">28</text>
+    <text class="row-num" x="741" y="686">28</text>
+    <rect class="floor-row" x="455" y="694" width="273" height="16"/>
+    <text class="row-num" x="442" y="702">27</text>
+    <text class="row-num" x="741" y="702">27</text>
+    <rect class="floor-row" x="455" y="710" width="273" height="16"/>
+    <text class="row-num" x="442" y="718">26</text>
+    <text class="row-num" x="741" y="718">26</text>
+    <rect class="floor-row" x="455" y="726" width="273" height="16"/>
+    <text class="row-num" x="442" y="734">25</text>
+    <text class="row-num" x="741" y="734">25</text>
+    <rect class="floor-row" x="455" y="742" width="273" height="16"/>
+    <text class="row-num" x="442" y="750">24</text>
+    <text class="row-num" x="741" y="750">24</text>
+    <rect class="floor-row" x="455" y="758" width="273" height="16"/>
+    <text class="row-num" x="442" y="766">23</text>
+    <text class="row-num" x="741" y="766">23</text>
+    <rect class="floor-row" x="455" y="774" width="273" height="16"/>
+    <text class="row-num" x="442" y="782">22</text>
+    <text class="row-num" x="741" y="782">22</text>
+    <rect class="floor-row" x="455" y="790" width="273" height="16"/>
+    <text class="row-num" x="442" y="798">21</text>
+    <text class="row-num" x="741" y="798">21</text>
+    <rect class="floor-row" x="455" y="806" width="273" height="16"/>
+    <text class="row-num" x="442" y="814">20</text>
+    <text class="row-num" x="741" y="814">20</text>
+    <rect class="floor-row" x="455" y="822" width="273" height="16"/>
+    <text class="row-num" x="442" y="830">19</text>
+    <text class="row-num" x="741" y="830">19</text>
+    <rect class="floor-row" x="455" y="838" width="273" height="16"/>
+    <text class="row-num" x="442" y="846">18</text>
+    <text class="row-num" x="741" y="846">18</text>
+    <rect class="floor-row" x="455" y="854" width="273" height="16"/>
+    <text class="row-num" x="442" y="862">17</text>
+    <text class="row-num" x="741" y="862">17</text>
+    <rect class="floor-row" x="455" y="870" width="273" height="16"/>
+    <text class="row-num" x="442" y="878">16</text>
+    <text class="row-num" x="741" y="878">16</text>
+    <rect class="floor-row" x="455" y="886" width="273" height="16"/>
+    <text class="row-num" x="442" y="894">15</text>
+    <text class="row-num" x="741" y="894">15</text>
+    <rect class="floor-row" x="455" y="902" width="273" height="16"/>
+    <text class="row-num" x="442" y="910">14</text>
+    <text class="row-num" x="741" y="910">14</text>
+    <rect class="floor-row" x="455" y="918" width="273" height="16"/>
+    <text class="row-num" x="442" y="926">13</text>
+    <text class="row-num" x="741" y="926">13</text>
+    <rect class="floor-row" x="455" y="934" width="273" height="16"/>
+    <text class="row-num" x="442" y="942">12</text>
+    <text class="row-num" x="741" y="942">12</text>
+    <rect class="floor-row" x="455" y="950" width="273" height="16"/>
+    <text class="row-num" x="442" y="958">11</text>
+    <text class="row-num" x="741" y="958">11</text>
+    <rect class="floor-row" x="455" y="966" width="273" height="16"/>
+    <text class="row-num" x="442" y="974">10</text>
+    <text class="row-num" x="741" y="974">10</text>
+    <rect class="floor-row" x="455" y="982" width="273" height="16"/>
+    <text class="row-num" x="442" y="990">9</text>
+    <text class="row-num" x="741" y="990">9</text>
+    <rect class="floor-row" x="455" y="998" width="273" height="16"/>
+    <text class="row-num" x="442" y="1006">8</text>
+    <text class="row-num" x="741" y="1006">8</text>
+    <rect class="floor-row" x="455" y="1014" width="273" height="16"/>
+    <text class="row-num" x="442" y="1022">7</text>
+    <text class="row-num" x="741" y="1022">7</text>
+    <rect class="floor-row" x="455" y="1030" width="273" height="16"/>
+    <text class="row-num" x="442" y="1038">6</text>
+    <text class="row-num" x="741" y="1038">6</text>
+    <rect class="floor-row" x="455" y="1046" width="273" height="16"/>
+    <text class="row-num" x="442" y="1054">5</text>
+    <text class="row-num" x="741" y="1054">5</text>
+    <rect class="floor-row" x="455" y="1062" width="273" height="16"/>
+    <text class="row-num" x="442" y="1070">4</text>
+    <text class="row-num" x="741" y="1070">4</text>
+    <rect class="floor-row" x="455" y="1078" width="273" height="16"/>
+    <text class="row-num" x="442" y="1086">3</text>
+    <text class="row-num" x="741" y="1086">3</text>
+    <rect class="floor-row" x="455" y="1094" width="273" height="16"/>
+    <text class="row-num" x="442" y="1102">2</text>
+    <text class="row-num" x="741" y="1102">2</text>
+    <rect class="floor-row" x="455" y="1110" width="273" height="16"/>
+    <text class="row-num" x="442" y="1118">1</text>
+    <text class="row-num" x="741" y="1118">1</text>
+  </g>
+
+</svg>

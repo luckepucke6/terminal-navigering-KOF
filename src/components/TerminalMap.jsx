@@ -29,7 +29,11 @@ function TerminalMap({ activeSection }) {
   // Fetch the SVG once when the component first loads.
   // Empty dependency array [] means: run this effect only once, on mount.
   useEffect(() => {
-    fetch('/map.svg')
+    // import.meta.env.BASE_URL is set by Vite from the "base" option in vite.config.js.
+    // Locally it is "/" so we get "/map.svg".
+    // On GitHub Pages it is "/terminal-navigering-KOF/" so we get
+    // "/terminal-navigering-KOF/map.svg" — which is where the file actually lives.
+    fetch(`${import.meta.env.BASE_URL}map.svg`)
       .then((response) => {
         if (!response.ok) throw new Error('SVG not found')
         return response.text()

@@ -1,0 +1,8 @@
+Copy the updated map file and start the dev server:
+
+- cp map.svg public/map.svg && cp public/map.svg src/assets/map.svg
+- git add public/map.svg src/assets/map.svg
+- git commit -m "feat: uppdatera karta – truckvägar hela höjden, C/D/E/F etiketter omplacerade"
+- npm run dev
+
+Then show me the local URL so I can open the app.

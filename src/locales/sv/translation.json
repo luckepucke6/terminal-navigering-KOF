@@ -1,0 +1,19 @@
+{
+  "search_placeholder": "Ange stad eller postnummer",
+  "search_button": "Sök",
+  "placement_label": "Placering",
+  "next_change_prefix": "Byter plats kl",
+  "admin_title": "Admin – logga in",
+  "pin_placeholder": "PIN-kod",
+  "pin_submit": "Logga in",
+  "pin_error": "Fel PIN-kod. Försök igen.",
+  "toggle_dark": "Mörkt läge",
+  "toggle_light": "Ljust läge",
+  "no_result": "Ingen matchande stad hittades",
+  "map_title": "Terminalkarta",
+  "admin_panel_placeholder": "Admin panel (kommer snart)",
+  "admin_logout": "Logga ut",
+  "back_to_search": "← Tillbaka till sökning",
+  "loading": "Laddar...",
+  "app_title": "Terminalen"
+}

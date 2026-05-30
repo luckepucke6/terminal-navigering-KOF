@@ -1,0 +1,19 @@
+{
+  "search_placeholder": "Enter city or postal code",
+  "search_button": "Search",
+  "placement_label": "Placement",
+  "next_change_prefix": "Changes location at",
+  "admin_title": "Admin – log in",
+  "pin_placeholder": "PIN code",
+  "pin_submit": "Log in",
+  "pin_error": "Wrong PIN code. Try again.",
+  "toggle_dark": "Dark mode",
+  "toggle_light": "Light mode",
+  "no_result": "No matching city found",
+  "map_title": "Terminal map",
+  "admin_panel_placeholder": "Admin panel (coming soon)",
+  "admin_logout": "Log out",
+  "back_to_search": "← Back to search",
+  "loading": "Loading...",
+  "app_title": "Terminal"
+}

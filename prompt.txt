@@ -1,8 +1,24 @@
-Copy the updated map file and start the dev server:
+Koppla Supabase till React och bygg sökfunktionen med kartan.
+Vad som ska göras:
 
-- cp map.svg public/map.svg && cp public/map.svg src/assets/map.svg
-- git add public/map.svg src/assets/map.svg
-- git commit -m "feat: uppdatera karta – truckvägar hela höjden, C/D/E/F etiketter omplacerade"
-- npm run dev
+1. Installera @supabase/supabase-js
+2. Skapa src/lib/supabase.js som initierar klienten med VITE_SUPABASE_URL och VITE_SUPABASE_ANON_KEY från .env
+3. Skapa src/components/Search.jsx där användaren skriver ett postnummer eller ortnamn — komponenten hämtar matchande rad från orter i Supabase och visar resultatet som text (område, sektion, platsnummer)
+4. När ett resultat hittas — markera rätt sektion på kartan genom att lägga till class highlighted på rätt section-group i src/assets/map.svg. SVG:n har redan id:n som section-A, section-B, section-C, section-D, section-E, section-F, section-Golv-left, section-Golv-right
+5. Lägg in Search.jsx och kartan i App.jsx
 
-Then show me the local URL so I can open the app.
+Tabellstruktur (orter):
+
+- namn — t.ex. "Sundsvall"
+- postnummer_fran / postnummer_till — int, intervall
+- rad_fran / rad_till — int, golvrader
+- sektion — t.ex. "C", "Golv"
+- plats_fran / plats_till — int, platsnummer i ställaget
+- notat — extra info
+
+Sökning:
+
+- Nummer (t.ex. 852) → matcha mot postnummer_fran och postnummer_till
+- Text (t.ex. "Sundsvall") → matcha mot namn med ilike
+
+ELI5-kommentarer i koden. Mobilfirst.

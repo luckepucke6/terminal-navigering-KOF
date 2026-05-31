@@ -8,9 +8,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import SearchBar from './components/SearchBar'
-import PlacementResult from './components/PlacementResult'
-import NextChangeAlert from './components/NextChangeAlert'
+import Search from './components/Search'
 import TerminalMap from './components/TerminalMap'
 import ThemeToggle from './components/ThemeToggle'
 import PinLogin from './components/PinLogin'
@@ -59,33 +57,10 @@ function App() {
   }
 
   // ---- SEARCH STATE ----
-  // result: the placement data returned after a search, or null
-  // noResult: true if a search ran but found nothing
-  // activeSection: which section to highlight on the map (e.g. "B", "Golv")
-  const [result, setResult] = useState(null)
-  const [noResult, setNoResult] = useState(false)
+  // activeSection: which section to highlight on the map (e.g. "B", "Golv").
+  // Search.jsx manages its own result state — App.jsx only needs to know
+  // which section is active so it can pass it down to TerminalMap.
   const [activeSection, setActiveSection] = useState(null)
-
-  // handleSearch is called by SearchBar when the worker submits a query.
-  // For now it returns a hardcoded demo result so we can see the UI working.
-  // Later, this will query Supabase for real data.
-  function handleSearch(query) {
-    // PLACEHOLDER: In the future, look up `query` in Supabase here.
-    // For now, return a demo result for any search.
-    const demoResult = {
-      city: query,
-      placement: 'B-12',
-      // Which section of the map to highlight
-      section: 'B',
-      // nextChange: if the location changes within 4 hours, include this.
-      // null means no upcoming change.
-      nextChange: { time: '14:00', placement: 'Golv rad 45' },
-    }
-
-    setResult(demoResult)
-    setNoResult(false)
-    setActiveSection(demoResult.section)
-  }
 
   // ---- RENDER ----
   return (
@@ -101,15 +76,8 @@ function App() {
         {/* ---- WORKER VIEW ---- */}
         {view === 'worker' && (
           <>
-            <SearchBar onSearch={handleSearch} />
-
-            {/* Show placement result if a search has been done */}
-            <PlacementResult result={result} noResult={noResult} />
-
-            {/* Show the "changing soon" alert if applicable */}
-            {result && (
-              <NextChangeAlert nextChange={result.nextChange} />
-            )}
+            {/* Search handles input, Supabase query, and result display */}
+            <Search onSectionChange={setActiveSection} />
 
             {/* The map is always visible, even before a search */}
             <TerminalMap activeSection={activeSection} />

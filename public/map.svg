@@ -21,9 +21,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="7.8441714"
-     inkscape:cx="37.16135"
-     inkscape:cy="509.93276"
+     inkscape:zoom="2.7733334"
+     inkscape:cx="259.43509"
+     inkscape:cy="971.39421"
      inkscape:window-width="1920"
      inkscape:window-height="1141"
      inkscape:window-x="0"
@@ -83,11 +83,12 @@
      id="text1">↕ truckväg</text>
   <rect
      class="aisle-rect"
-     x="752"
+     x="753.08173"
      y="0"
-     width="48"
+     width="46.91827"
      height="1200"
-     id="rect2" />
+     id="rect2"
+     style="stroke-width:0.988668" />
   <text
      class="aisle-lbl"
      x="776"
@@ -537,10 +538,10 @@
      class="aisle-rect"
      x="45.295673"
      y="62"
-     width="707.70435"
+     width="711.67072"
      height="59.249454"
      id="rect43"
-     style="stroke-width:1.11314" />
+     style="stroke-width:1.11625" />
   <text
      class="aisle-lbl"
      x="400"
@@ -1814,10 +1815,10 @@
      class="aisle-rect"
      x="43.793056"
      y="495.8808"
-     width="709.20697"
-     height="55.297985"
+     width="713.17334"
+     height="54.216255"
      id="rect156"
-     style="stroke-width:1.17927" />
+     style="stroke-width:1.17094" />
   <text
      class="aisle-lbl"
      x="400"
@@ -1847,10 +1848,11 @@
   <rect
      class="aisle-rect"
      x="370"
-     y="550"
+     y="547.47595"
      width="60"
-     height="608"
-     id="rect160" />
+     height="610.52405"
+     id="rect160"
+     style="stroke-width:1.00207" />
   <text
      class="aisle-lbl"
      x="400"

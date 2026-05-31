@@ -55,9 +55,15 @@ function TerminalMap({ activeSection }) {
     // If a section is active, add "highlighted" to just that group.
     // The SVG's embedded CSS then turns all .spot / .floor-row within it yellow.
     if (activeSection) {
-      const target = containerRef.current.querySelector(`#section-${activeSection}`)
-      if (target) {
-        target.classList.add('highlighted')
+      if (activeSection === 'Golv') {
+        // The floor (golvet) is split into two SVG groups — highlight both.
+        const left = containerRef.current.querySelector('#section-Golv-left')
+        const right = containerRef.current.querySelector('#section-Golv-right')
+        if (left) left.classList.add('highlighted')
+        if (right) right.classList.add('highlighted')
+      } else {
+        const target = containerRef.current.querySelector(`#section-${activeSection}`)
+        if (target) target.classList.add('highlighted')
       }
     }
   }, [mapHtml, activeSection])

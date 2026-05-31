@@ -47,31 +47,24 @@ function TerminalMap({ activeResult }) {
   useEffect(() => {
     if (!containerRef.current || !mapHtml) return
 
-    // Clear all previously highlighted individual spots and floor rows.
+    // Clear all previously highlighted section groups and individual spots.
     containerRef.current
-      .querySelectorAll('.spot.highlighted, .floor-row.highlighted, .floor-row-recv.highlighted')
+      .querySelectorAll('.section-group.highlighted, .spot.highlighted, .floor-row.highlighted, .floor-row-recv.highlighted')
       .forEach((el) => el.classList.remove('highlighted'))
 
     if (!activeResult) return
 
-    const { sektion, plats_fran, plats_till, rad_fran, rad_till } = activeResult
+    const { sektion, plats_fran, plats_till } = activeResult
 
     if (sektion === 'Golv') {
-      // Floor placement: highlight each floor-row whose row number is in [rad_fran, rad_till].
-      // The floor is split across two SVG groups (Golv-left and Golv-right) — check both.
-      // Each floor-row rect is immediately followed by a text.row-num with the row number.
-      ;['Golv-left', 'Golv-right'].forEach((side) => {
-        const groupEl = containerRef.current.querySelector(`#section-${side}`)
-        if (!groupEl) return
-        groupEl.querySelectorAll('rect.floor-row, rect.floor-row-recv').forEach((rect) => {
-          const label = rect.nextElementSibling
-          if (!label) return
-          const rowNum = parseInt(label.textContent, 10)
-          if (rowNum >= rad_fran && rowNum <= rad_till) {
-            rect.classList.add('highlighted')
-          }
-        })
-      })
+      // Floor placement: add "highlighted" to both floor section groups.
+      // The CSS rule .section-group.highlighted .floor-row turns them yellow.
+      // The floor is split into two SVG groups — we highlight both so the
+      // whole floor area lights up as a visual cue.
+      const left = containerRef.current.querySelector('#section-Golv-left')
+      const right = containerRef.current.querySelector('#section-Golv-right')
+      if (left) left.classList.add('highlighted')
+      if (right) right.classList.add('highlighted')
     } else {
       // Rack placement (sections A–F): highlight each spot whose number is in [plats_fran, plats_till].
       // Each spot is a rect.spot immediately followed by a text.spot-num with the spot number.

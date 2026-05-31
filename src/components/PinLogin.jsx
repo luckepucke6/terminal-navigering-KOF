@@ -1,34 +1,28 @@
-// PinLogin is the admin login screen — a simple form with a PIN code field.
-// Admins enter a 4-digit PIN to access the admin panel.
-//
-// For now, the PIN check is hardcoded here as a placeholder.
-// In a real setup, this would verify the PIN against Supabase Auth.
-// The hardcoded PIN is: 1234 (change before going live!)
+// PinLogin is the password gate in front of the admin panel.
+// The correct password lives in the VITE_ADMIN_PASSWORD environment variable.
+// VITE_ prefix means Vite injects it at build time — it ends up in the JS bundle,
+// which is fine here since this is an internal warehouse app, not a public service.
 
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
-// onSuccess: function to call when the correct PIN is entered
-// onBack: function to call when the worker clicks "← Tillbaka"
+// VITE_ADMIN_PASSWORD is set in .env (local dev) or as a GitHub Actions secret.
+// The fallback 'admin' only applies if the variable is missing entirely.
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin'
+
+// onSuccess: called when the correct password is entered
+// onBack: called when the user clicks "Tillbaka"
 function PinLogin({ onSuccess, onBack }) {
-  const { t } = useTranslation()
-
-  // pin: what the user has typed so far
-  const [pin, setPin] = useState('')
-  // error: a message to show if the wrong PIN was entered
-  const [error, setError] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(false)
 
   function handleSubmit(event) {
     event.preventDefault()
-
-    // TODO: Replace this hardcoded check with a real Supabase Auth call.
-    // The correct PIN is 1234 for now — do not ship this to production!
-    if (pin === '1234') {
-      setError('')
+    if (password === ADMIN_PASSWORD) {
+      setError(false)
       onSuccess()
     } else {
-      setError(t('pin_error'))
-      setPin('')
+      setError(true)
+      setPassword('')
     }
   }
 
@@ -38,78 +32,58 @@ function PinLogin({ onSuccess, onBack }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '24px',
-        padding: '40px 16px',
-        maxWidth: '320px',
-        margin: '0 auto',
+        paddingTop: '48px',
       }}
     >
-      {/* Back link */}
-      <button
-        className="btn-ghost"
-        onClick={onBack}
-        style={{ alignSelf: 'flex-start', fontSize: '0.875rem' }}
-      >
-        {t('back_to_search')}
-      </button>
-
-      <h1
-        style={{
-          fontSize: '1.25rem',
-          fontWeight: '700',
-          color: 'var(--color-text)',
-          textAlign: 'center',
-        }}
-      >
-        {t('admin_title')}
-      </h1>
-
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          width: '100%',
-        }}
-      >
-        <input
-          type="password"
-          value={pin}
-          onChange={(e) => {
-            // Only allow digits, max 6 characters
-            const digits = e.target.value.replace(/\D/g, '').slice(0, 6)
-            setPin(digits)
-            setError('')
+      <div className="card" style={{ width: '100%', maxWidth: '360px' }}>
+        <h2
+          style={{
+            margin: '0 0 24px',
+            fontSize: '1.2rem',
+            fontWeight: '700',
+            color: 'var(--color-text)',
           }}
-          placeholder={t('pin_placeholder')}
-          // inputMode="numeric" shows the number keypad on mobile phones
-          inputMode="numeric"
-          autoComplete="current-password"
-          style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.5em' }}
-        />
+        >
+          Admin — logga in
+        </h2>
 
-        {/* Error message — only shown after a wrong attempt */}
-        {error && (
-          <div
-            style={{
-              color: 'var(--color-error)',
-              fontSize: '0.875rem',
-              textAlign: 'center',
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setError(false)
             }}
+            placeholder="Lösenord"
+            autoFocus
+            autoComplete="current-password"
+          />
+
+          {/* Show error only after a failed attempt */}
+          {error && (
+            <div style={{ color: 'var(--color-error)', fontSize: '0.875rem' }}>
+              Fel lösenord.
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={password.length === 0}
           >
-            {error}
-          </div>
-        )}
+            Logga in
+          </button>
+        </form>
 
         <button
-          type="submit"
-          className="btn-primary"
-          disabled={pin.length < 4}
+          className="btn-ghost"
+          onClick={onBack}
+          style={{ marginTop: '12px', width: '100%' }}
         >
-          {t('pin_submit')}
+          ← Tillbaka
         </button>
-      </form>
+      </div>
     </div>
   )
 }

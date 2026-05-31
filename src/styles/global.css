@@ -96,6 +96,18 @@ body {
   flex: 1;
 }
 
+/* Admin wrapper is wider than the worker view — table needs the space. */
+.admin-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
 /* ===== APP HEADER ===== */
 .app-header {
   display: flex;

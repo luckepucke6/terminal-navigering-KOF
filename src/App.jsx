@@ -23,6 +23,13 @@ function getInitialTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
+// ---- Routing helper ----
+// We use the URL hash (#admin) so the admin page survives a page refresh
+// and works on GitHub Pages without any server configuration.
+function getInitialView() {
+  return window.location.hash === '#admin' ? 'admin' : 'worker'
+}
+
 function App() {
   const { t } = useTranslation()
 
@@ -43,15 +50,32 @@ function App() {
 
   // ---- VIEW STATE ----
   // 'worker': the main search screen (open to everyone)
-  // 'admin': the admin area (PIN-protected)
-  const [view, setView] = useState('worker')
+  // 'admin': the admin area (password-protected)
+  const [view, setView] = useState(getInitialView)
   const [adminAuthenticated, setAdminAuthenticated] = useState(false)
 
+  // Listen for browser back/forward navigation changing the hash.
+  // Without this, pressing the back button would change the URL but not the view.
+  useEffect(() => {
+    function onHashChange() {
+      if (window.location.hash === '#admin') {
+        setView('admin')
+      } else {
+        setView('worker')
+        setAdminAuthenticated(false)
+      }
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
   function goToAdmin() {
+    window.location.hash = 'admin'
     setView('admin')
   }
 
   function goToWorker() {
+    window.location.hash = ''
     setView('worker')
     setAdminAuthenticated(false)
   }
@@ -65,7 +89,7 @@ function App() {
   // ---- RENDER ----
   return (
     <div id="app">
-      <div className="app-wrapper">
+      <div className={view === 'admin' ? 'admin-wrapper' : 'app-wrapper'}>
 
         {/* Header: app title + theme toggle, always visible */}
         <header className="app-header">
@@ -82,23 +106,15 @@ function App() {
             {/* The map is always visible, even before a search */}
             <TerminalMap activeResult={activeResult} />
 
-            {/* Small admin link at the bottom */}
-            <footer className="app-footer">
-              <button
-                className="btn-ghost"
-                onClick={goToAdmin}
-                style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}
-              >
-                Admin
-              </button>
-            </footer>
+            {/* No admin link here — admins navigate directly to /#admin */}
+            <footer className="app-footer" style={{ minHeight: '24px' }} />
           </>
         )}
 
         {/* ---- ADMIN VIEW ---- */}
         {view === 'admin' && (
           <>
-            {/* If not yet authenticated, show the PIN login screen */}
+            {/* If not yet authenticated, show the password login screen */}
             {!adminAuthenticated && (
               <PinLogin
                 onSuccess={() => setAdminAuthenticated(true)}

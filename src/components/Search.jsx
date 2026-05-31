@@ -77,6 +77,9 @@ function Search({ onSectionChange }) {
     // .limit(1) — we only need the first match
     const { data, error } = await dbQuery.limit(1)
 
+    // Log to browser console so we can debug Supabase issues
+    console.log('[Search] data:', data, 'error:', error)
+
     setLoading(false)
 
     if (error || !data || data.length === 0) {

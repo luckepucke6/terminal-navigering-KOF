@@ -57,10 +57,10 @@ function App() {
   }
 
   // ---- SEARCH STATE ----
-  // activeSection: which section to highlight on the map (e.g. "B", "Golv").
-  // Search.jsx manages its own result state — App.jsx only needs to know
-  // which section is active so it can pass it down to TerminalMap.
-  const [activeSection, setActiveSection] = useState(null)
+  // activeResult: the full Supabase row from the last search, or null.
+  // Search.jsx manages its own display state — App.jsx just passes this
+  // down to TerminalMap so it knows which spots to highlight.
+  const [activeResult, setActiveResult] = useState(null)
 
   // ---- RENDER ----
   return (
@@ -77,10 +77,10 @@ function App() {
         {view === 'worker' && (
           <>
             {/* Search handles input, Supabase query, and result display */}
-            <Search onSectionChange={setActiveSection} />
+            <Search onResultChange={setActiveResult} />
 
             {/* The map is always visible, even before a search */}
-            <TerminalMap activeSection={activeSection} />
+            <TerminalMap activeResult={activeResult} />
 
             {/* Small admin link at the bottom */}
             <footer className="app-footer">

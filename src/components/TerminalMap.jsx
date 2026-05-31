@@ -1,23 +1,24 @@
-// TerminalMap loads the SVG map and highlights whichever section is active.
+// TerminalMap loads the SVG map and highlights specific pallet spots or floor rows.
 //
 // WHY do we fetch() the SVG instead of using <img src="map.svg">?
 // Because we need to reach INSIDE the SVG and change the visual style of
-// individual sections (like turning section B yellow). An <img> tag treats
-// the SVG as a sealed black box — we cannot touch anything inside it.
-// By fetching the SVG text and injecting it into a <div>, the SVG becomes
-// part of the page's DOM and we can manipulate individual elements.
+// individual spots. An <img> tag treats the SVG as a sealed black box —
+// we cannot touch anything inside it. By fetching the SVG text and injecting
+// it into a <div>, the SVG becomes part of the page's DOM and we can
+// manipulate individual elements.
 //
 // HOW highlighting works:
-// The SVG has section groups like <g id="section-B" class="section-group">.
-// To highlight section B, we add "highlighted" to its class list.
-// The CSS rule .section-group.highlighted .spot { fill: yellow } does the rest.
-// This keeps all the visual logic in CSS, not scattered through JavaScript.
+// Each spot is a <rect class="spot"> followed by a <text class="spot-num">NUMBER</text>.
+// We find the text elements whose number falls within [plats_fran, plats_till],
+// then add "highlighted" to the preceding rect.
+// The SVG's embedded CSS rule .spot.highlighted { fill: yellow } does the rest.
 
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-// activeSection: a string like "A", "B", "Golv-left" — or null for no highlight
-function TerminalMap({ activeSection }) {
+// activeResult: the full Supabase row object, or null for no highlight.
+// Expected fields: sektion, plats_fran, plats_till, rad_fran, rad_till
+function TerminalMap({ activeResult }) {
   const { t } = useTranslation()
 
   const [mapHtml, setMapHtml] = useState('')
@@ -42,31 +43,52 @@ function TerminalMap({ activeSection }) {
       .catch(() => setError(true))
   }, [])
 
-  // When the SVG loads OR the active section changes, update the highlight.
+  // When the SVG loads OR the search result changes, update the highlight.
   useEffect(() => {
     if (!containerRef.current || !mapHtml) return
 
-    // Remove "highlighted" from ALL section groups first.
-    // This clears the previous search result's highlight.
-    containerRef.current.querySelectorAll('.section-group').forEach((el) => {
-      el.classList.remove('highlighted')
-    })
+    // Clear all previously highlighted individual spots and floor rows.
+    containerRef.current
+      .querySelectorAll('.spot.highlighted, .floor-row.highlighted, .floor-row-recv.highlighted')
+      .forEach((el) => el.classList.remove('highlighted'))
 
-    // If a section is active, add "highlighted" to just that group.
-    // The SVG's embedded CSS then turns all .spot / .floor-row within it yellow.
-    if (activeSection) {
-      if (activeSection === 'Golv') {
-        // The floor (golvet) is split into two SVG groups — highlight both.
-        const left = containerRef.current.querySelector('#section-Golv-left')
-        const right = containerRef.current.querySelector('#section-Golv-right')
-        if (left) left.classList.add('highlighted')
-        if (right) right.classList.add('highlighted')
-      } else {
-        const target = containerRef.current.querySelector(`#section-${activeSection}`)
-        if (target) target.classList.add('highlighted')
-      }
+    if (!activeResult) return
+
+    const { sektion, plats_fran, plats_till, rad_fran, rad_till } = activeResult
+
+    if (sektion === 'Golv') {
+      // Floor placement: highlight each floor-row whose row number is in [rad_fran, rad_till].
+      // The floor is split across two SVG groups (Golv-left and Golv-right) — check both.
+      // Each floor-row rect is immediately followed by a text.row-num with the row number.
+      ;['Golv-left', 'Golv-right'].forEach((side) => {
+        const groupEl = containerRef.current.querySelector(`#section-${side}`)
+        if (!groupEl) return
+        groupEl.querySelectorAll('rect.floor-row, rect.floor-row-recv').forEach((rect) => {
+          const label = rect.nextElementSibling
+          if (!label) return
+          const rowNum = parseInt(label.textContent, 10)
+          if (rowNum >= rad_fran && rowNum <= rad_till) {
+            rect.classList.add('highlighted')
+          }
+        })
+      })
+    } else {
+      // Rack placement (sections A–F): highlight each spot whose number is in [plats_fran, plats_till].
+      // Each spot is a rect.spot immediately followed by a text.spot-num with the spot number.
+      // So textEl.previousElementSibling gives us the rect to highlight.
+      const sectionEl = containerRef.current.querySelector(`#section-${sektion}`)
+      if (!sectionEl) return
+      sectionEl.querySelectorAll('text.spot-num').forEach((textEl) => {
+        const spotNum = parseInt(textEl.textContent, 10)
+        if (spotNum >= plats_fran && spotNum <= plats_till) {
+          const rect = textEl.previousElementSibling
+          if (rect?.classList.contains('spot')) {
+            rect.classList.add('highlighted')
+          }
+        }
+      })
     }
-  }, [mapHtml, activeSection])
+  }, [mapHtml, activeResult])
 
   if (error) {
     return (

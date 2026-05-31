@@ -28,9 +28,9 @@ function formatPlacement(row) {
   return `Sektion ${row.sektion}, plats ${row.plats_fran}–${row.plats_till}`
 }
 
-// onSectionChange: called whenever the active section changes.
-// App.jsx listens to this and passes the value to TerminalMap.
-function Search({ onSectionChange }) {
+// onResultChange: called with the full Supabase row when a match is found, or null on reset.
+// App.jsx passes the row to TerminalMap so it can highlight the exact spots.
+function Search({ onResultChange }) {
   // query: what the worker has typed so far
   const [query, setQuery] = useState('')
 
@@ -54,7 +54,7 @@ function Search({ onSectionChange }) {
     setLoading(true)
     setNoResult(false)
     setResult(null)
-    onSectionChange(null) // clear map highlight
+    onResultChange(null) // clear map highlight
 
     // Decide whether the worker typed a number (postal code) or text (city)
     const isPostalCode = /^\d+$/.test(trimmed)
@@ -89,8 +89,8 @@ function Search({ onSectionChange }) {
 
     const row = data[0]
     setResult(row)
-    // Tell the map which section to highlight
-    onSectionChange(row.sektion)
+    // Pass the full row to TerminalMap so it can highlight the exact spots
+    onResultChange(row)
   }
 
   return (

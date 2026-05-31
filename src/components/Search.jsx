@@ -10,22 +10,39 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-// Helper: turn a database row into a human-readable placement string.
-// Examples: "Sektion B, plats 12–24" or "Golvet, rad 45–60"
+// Helper: turn a database row into one or two human-readable placement strings.
+// Returns an array so the caller can render each part on its own line.
+// Examples:
+//   ["Sektion B, plats 12–24"]
+//   ["Golv, rad 45–60"]
+//   ["Sektion C, plats 3–7", "Golv, rad 12–18"]  ← if both are set
 function formatPlacement(row) {
-  if (row.sektion === 'Golv') {
-    // Floor placement — show row range
-    if (row.rad_fran === row.rad_till) {
-      return `Golvet, rad ${row.rad_fran}`
-    }
-    return `Golvet, rad ${row.rad_fran}–${row.rad_till}`
+  const parts = []
+
+  // Rack part — only if sektion is a letter (not null, not "Golv")
+  const hasRack = row.sektion && row.sektion !== 'Golv' && row.plats_fran != null
+  if (hasRack) {
+    const range =
+      row.plats_fran === row.plats_till
+        ? `${row.plats_fran}`
+        : `${row.plats_fran}–${row.plats_till}`
+    parts.push(`Sektion ${row.sektion}, plats ${range}`)
   }
 
-  // Racking placement (sections A–F) — show pallet spot range
-  if (row.plats_fran === row.plats_till) {
-    return `Sektion ${row.sektion}, plats ${row.plats_fran}`
+  // Floor part — if rad_fran is set, OR if sektion is explicitly "Golv"
+  const hasFloor = row.rad_fran != null || row.sektion === 'Golv'
+  if (hasFloor && row.rad_fran != null) {
+    const range =
+      row.rad_fran === row.rad_till
+        ? `${row.rad_fran}`
+        : `${row.rad_fran}–${row.rad_till}`
+    parts.push(`Golv, rad ${range}`)
   }
-  return `Sektion ${row.sektion}, plats ${row.plats_fran}–${row.plats_till}`
+
+  // Fallback — should not happen if the data is correct
+  if (parts.length === 0) parts.push('Okänd placering')
+
+  return parts
 }
 
 // onResultChange: called with the full Supabase row when a match is found, or null on reset.
@@ -154,18 +171,24 @@ function Search({ onResultChange }) {
             )}
           </div>
 
-          {/* Placement — the most important piece of info, must be readable at a glance */}
-          <div
-            style={{
-              fontSize: '2rem',
-              fontWeight: '800',
-              color: 'var(--color-text)',
-              lineHeight: '1.2',
-              letterSpacing: '-0.5px',
-            }}
-          >
-            {formatPlacement(result)}
-          </div>
+          {/* Placement — the most important piece of info, must be readable at a glance.
+              formatPlacement returns an array so we can show multiple lines
+              (e.g. both a rack section and a floor row). */}
+          {formatPlacement(result).map((line, i) => (
+            <div
+              key={i}
+              style={{
+                fontSize: '2rem',
+                fontWeight: '800',
+                color: 'var(--color-text)',
+                lineHeight: '1.2',
+                letterSpacing: '-0.5px',
+                marginTop: i > 0 ? '4px' : '0',
+              }}
+            >
+              {line}
+            </div>
+          ))}
 
           {/* Extra notes from the database, if any */}
           {result.notat && (
